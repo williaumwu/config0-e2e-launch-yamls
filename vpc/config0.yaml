@@ -23,7 +23,6 @@ stacks:
     arguments:
       vpc_name: eval-config0-vpc-simple
       eks_cluster: eval-config0-eks
-      base_cidr: "999.999"
       # _hash convention: authored as a dictionary, delivered to the worker as
       # a base64 string via spec.serialization.to_base64 below
       cloud_tags_hash:
