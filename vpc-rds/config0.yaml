@@ -22,6 +22,8 @@ labels:
 selectors:
   network_vars:
     match:
+      filter:
+        resource_type: vpc
       labels:
         environment: dev
         purpose: eval-config0
