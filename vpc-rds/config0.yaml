@@ -50,6 +50,7 @@ stacks:
     arguments:
       vpc_name: eval-config0-vpc-simple
       rds_name: eval-config0-rds
+      engine_version: "8.0.46"
       # _hash convention: authored as a dictionary, delivered to the worker as a
       # base64 string via spec.serialization.to_base64 below.
       cloud_tags_hash:
