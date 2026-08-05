@@ -63,7 +63,7 @@ stacks:
       eks_cluster_sg_id: selector:::sg_vars::bastion_sg_id
       eks_node_group_subnet_ids: selector:::network_vars::private_subnet_ids:csv
       eks_node_capacity_type: ON_DEMAND
-      eks_node_ami_type: AL2_x86_64
+      eks_node_ami_type: AL2023_x86_64_STANDARD
       eks_node_max_capacity: 1
       eks_node_min_capacity: 1
       eks_node_desired_capacity: 1
