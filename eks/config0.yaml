@@ -45,17 +45,6 @@ selectors:
         area: network
         cloud: aws
 
-  # eks_info matches the eks resource record itself — node_role_arn is a terraform
-  # output on the eks record, read back into the node group via a resource_type-keyed
-  # selector.
-  eks_info:
-    match:
-      filter:
-        resource_type: eks
-      labels:
-        environment: dev
-        purpose: eval-config0
-
 stacks:
   eks:
     stack: williaumwu:::config0-e2e-authoring::eks
@@ -73,7 +62,6 @@ stacks:
       eks_cluster_subnet_ids: selector:::network_vars::public_subnet_ids:csv
       eks_cluster_sg_id: selector:::sg_vars::bastion_sg_id
       eks_node_group_subnet_ids: selector:::network_vars::private_subnet_ids:csv
-      eks_node_role_arn: selector:::eks_info::node_role_arn
       eks_node_capacity_type: ON_DEMAND
       eks_node_ami_type: AL2_x86_64
       eks_node_max_capacity: 1
@@ -86,4 +74,3 @@ stacks:
     selectors:
       - network_vars
       - sg_vars
-      - eks_info
