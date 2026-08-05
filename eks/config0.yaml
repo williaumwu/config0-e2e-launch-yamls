@@ -16,11 +16,15 @@ labels:
 # top-level `selectors:` key; the rewrite must restore it instead of guessing
 # from bare top-level keys with a match: sub-key).
 selectors:
-  # network_vars matches the VPC resource record (it alone carries labels_region).
-  # vpc_simple promotes every terraform output onto that record, so vpc_name +
-  # public_subnet_ids + private_subnet_ids read off it. These are part-1's VPC records.
+  # network_vars matches the VPC resource record. The vpc and security_group are
+  # SEPARATE records that both carry area=network/region labels, so the labels
+  # alone match two rows; a resource_type filter (mirroring sg_vars) narrows it to
+  # the single VPC record. vpc_simple promotes every terraform output onto that
+  # record, so vpc_name + public_subnet_ids + private_subnet_ids read off it.
   network_vars:
     match:
+      filter:
+        resource_type: vpc
       labels:
         environment: dev
         purpose: eval-config0
