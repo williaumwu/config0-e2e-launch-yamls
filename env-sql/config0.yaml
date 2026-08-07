@@ -21,6 +21,8 @@ selectors:
       labels:
         environment: dev
         purpose: config0
+      expect:
+        optional: true
 
   sg_vars:
     match:
@@ -29,6 +31,8 @@ selectors:
       labels:
         environment: dev
         purpose: config0
+      expect:
+        optional: true
 
 stacks:
   env_3tier:
