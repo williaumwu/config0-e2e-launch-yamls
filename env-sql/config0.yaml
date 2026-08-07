@@ -60,3 +60,8 @@ stacks:
     selectors:
       - vpc_info
       - sg_vars
+    spec:
+      serialization:
+        to_base64:
+          arguments:
+            - cloud_tags_hash
