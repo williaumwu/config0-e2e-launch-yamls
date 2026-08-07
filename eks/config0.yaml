@@ -61,17 +61,7 @@ stacks:
       eks_cluster_version: "1.35"
       eks_cluster_subnet_ids: selector:::network_vars::public_subnet_ids:csv
       eks_cluster_sg_id: selector:::sg_vars::bastion_sg_id
-      # Nodegroup subnets: eval-config0-vpc-simple (story-01) has no NAT gateway
-      # and no ECR/EKS interface endpoints — only S3+DynamoDB gateway endpoints
-      # (confirmed via aws ec2 describe-nat-gateways / describe-vpc-endpoints on
-      # vpc-0d918ac00a2216bdf). Nodes launched into the private subnets have no
-      # network path to the EKS API or ECR and fail with
-      # "NodeCreationFailure: Instances failed to join the kubernetes cluster".
-      # The reference config (config0_yamls_repos/eks/config0-eks-separate-nodegroup.yml)
-      # explicitly comments "vpc with NAT, private_subnet_ids is more secure" and
-      # uses public_subnet_ids for the nodegroup precisely because this VPC has no
-      # NAT. Match that reference here instead of private subnets.
-      eks_node_group_subnet_ids: selector:::network_vars::public_subnet_ids:csv
+      eks_node_group_subnet_ids: selector:::network_vars::private_subnet_ids:csv
       eks_node_capacity_type: ON_DEMAND
       eks_node_ami_type: AL2023_x86_64_STANDARD
       eks_node_max_capacity: 1
