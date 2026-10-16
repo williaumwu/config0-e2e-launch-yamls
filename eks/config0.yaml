@@ -1,0 +1,76 @@
+global:
+  arguments:
+    aws_default_region: eu-west-1
+
+labels:
+  general:
+    environment: dev
+    purpose: eval-config0
+  infrastructure:
+    cloud: aws
+    product: eks
+    area: compute
+
+# Explicit selectors section — named selector definitions live under this key,
+# distinct from labels (work order WO-2: the original parser read an explicit
+# top-level `selectors:` key; the rewrite must restore it instead of guessing
+# from bare top-level keys with a match: sub-key).
+selectors:
+  # network_vars matches the VPC resource record. The vpc and security_group are
+  # SEPARATE records that both carry area=network/region labels, so the labels
+  # alone match two rows; a resource_type filter (mirroring sg_vars) narrows it to
+  # the single VPC record. vpc_simple promotes every terraform output onto that
+  # record, so vpc_name + public_subnet_ids + private_subnet_ids read off it.
+  network_vars:
+    match:
+      filter:
+        resource_type: vpc
+      labels:
+        environment: dev
+        purpose: eval-config0
+        area: network
+        region: eu-west-1
+        cloud: aws
+
+  # sg_vars matches the security_group record — a SEPARATE record from the VPC.
+  # bastion_sg_id is a terraform output on this record only, so it needs its own
+  # resource_type-keyed selector.
+  sg_vars:
+    match:
+      filter:
+        resource_type: security_group
+      labels:
+        environment: dev
+        purpose: eval-config0
+        area: network
+        cloud: aws
+
+stacks:
+  eks:
+    stack: williaumwu:::config0-e2e-authoring::eks
+    # explicit per-stack label references — the stack names the label groups it
+    # wants (target syntax; parser ignores it today — that's fine).
+    labels:
+      - general
+      - infrastructure
+    arguments:
+      # EKS-to-VPC wiring — kept exactly as the config0_yamls_repos eks scenario:
+      vpc_name: selector:::network_vars::vpc_name
+      vpc_id: selector:::network_vars::vpc_id
+      eks_cluster: eval-config0-eks
+      eks_cluster_version: "1.35"
+      eks_cluster_subnet_ids: selector:::network_vars::public_subnet_ids:csv
+      eks_cluster_sg_id: selector:::sg_vars::bastion_sg_id
+      eks_node_group_subnet_ids: selector:::network_vars::private_subnet_ids:csv
+      eks_node_capacity_type: ON_DEMAND
+      eks_node_ami_type: AL2023_x86_64_STANDARD
+      eks_node_max_capacity: 1
+      eks_node_min_capacity: 1
+      eks_node_desired_capacity: 1
+      eks_node_disksize: 25
+      eks_node_instance_types:
+        - t3.medium
+        - t3.large
+    selectors:
+      - network_vars
+      - sg_vars
