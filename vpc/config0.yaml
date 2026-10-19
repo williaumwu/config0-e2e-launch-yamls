@@ -30,8 +30,9 @@ selectors:
 stacks:
   vpc:
     stack: williaumwu:::config0-e2e-authoring::aws_simple_vpc
-    # the top-level labels: block only declares named sets; this stack carries
-    # exactly the ones it names here
+    # explicit per-stack label references — each stack names the label groups
+    # it wants (work order WO-1: the platform must honor this instead of
+    # auto-stamping every project label group onto every stack)
     labels:
       - general
       - infrastructure
